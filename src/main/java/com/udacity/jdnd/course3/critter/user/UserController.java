@@ -1,11 +1,11 @@
 package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.pet.Pet;
+import com.udacity.jdnd.course3.critter.pet.PetService;
 import com.udacity.jdnd.course3.critter.user.data.Employee;
 import com.udacity.jdnd.course3.critter.user.data.User;
 import com.udacity.jdnd.course3.critter.user.service.EmployeeService;
 import com.udacity.jdnd.course3.critter.user.service.UserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -25,17 +25,17 @@ public class UserController {
 
     private final UserService userService;
     private final EmployeeService employeeService;
+    private final PetService petService;
 
-    public UserController(UserService userService, EmployeeService employeeService) {
+    public UserController(UserService userService, EmployeeService employeeService, PetService petService) {
         this.userService = userService;
         this.employeeService = employeeService;
+        this.petService = petService;
     }
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-       User user = new User();
-       BeanUtils.copyProperties(customerDTO, user);
-       User createdUser = userService.createUser(user);
+       User createdUser = userService.createUser(convertCustomerDTOToUser(customerDTO));
        return convertUserToCustomerDTO(createdUser);
     }
 
@@ -49,14 +49,13 @@ public class UserController {
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        throw new UnsupportedOperationException();
+        User user = userService.getOwnerByPet(petId);
+        return convertUserToCustomerDTO(user);
     }
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        Employee employee = new Employee();
-        BeanUtils.copyProperties(employeeDTO, employee);
-        Employee createdEmployee = employeeService.createEmployee(employee);
+        Employee createdEmployee = employeeService.createEmployee(convertEmployeeDTOToEmployee(employeeDTO));
         return convertEmployeeToEmployeeDTO(createdEmployee);
     }
 
@@ -76,9 +75,24 @@ public class UserController {
         throw new UnsupportedOperationException();
     }
 
+    private User convertCustomerDTOToUser(CustomerDTO customerDTO) {
+        User user = new User();
+        user.setName(customerDTO.getName());
+        user.setPhoneNumber(customerDTO.getPhoneNumber());
+        List<Pet> pets = new LinkedList<>();
+        List<Long> petIds = customerDTO.getPetIds();
+        if (petIds != null) {
+            petIds.forEach(id -> petService.getPet(id));
+        }
+        user.setPets(pets);
+        return user;
+    }
+
     private CustomerDTO convertUserToCustomerDTO(User user) {
         CustomerDTO customerDTO = new CustomerDTO();
-        BeanUtils.copyProperties(user, customerDTO);
+        customerDTO.setId(user.getId());
+        customerDTO.setName(user.getName());
+        customerDTO.setPhoneNumber(user.getPhoneNumber());
         List<Long> petIds = new LinkedList<>();
         List<Pet> pets = user.getPets();
         if (pets != null) {
@@ -88,9 +102,20 @@ public class UserController {
         return customerDTO;
     }
 
+    private Employee convertEmployeeDTOToEmployee(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        employee.setName(employeeDTO.getName());
+        employee.setDaysAvailable(employeeDTO.getDaysAvailable());
+        employee.setSkills(employeeDTO.getSkills());
+        return employee;
+    }
+
     private EmployeeDTO convertEmployeeToEmployeeDTO(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
-        BeanUtils.copyProperties(employee, employeeDTO);
+        employeeDTO.setId(employee.getId());
+        employeeDTO.setName(employee.getName());
+        employeeDTO.setDaysAvailable(employee.getDaysAvailable());
+        employeeDTO.setSkills(employee.getSkills());
         return employeeDTO;
     }
 }
