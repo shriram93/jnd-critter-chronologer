@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.pet.Pet;
 import com.udacity.jdnd.course3.critter.user.data.Employee;
 import com.udacity.jdnd.course3.critter.user.data.User;
 import com.udacity.jdnd.course3.critter.user.service.EmployeeService;
@@ -35,19 +36,14 @@ public class UserController {
        User user = new User();
        BeanUtils.copyProperties(customerDTO, user);
        User createdUser = userService.createUser(user);
-       BeanUtils.copyProperties(createdUser, customerDTO);
-       return customerDTO;
+       return convertUserToCustomerDTO(createdUser);
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
         List<User> users = userService.getAllUsers();
         List<CustomerDTO> customerDTOS = new LinkedList<>();
-        for(User user: users) {
-            CustomerDTO customerDTO = new CustomerDTO();
-            BeanUtils.copyProperties(user, customerDTO);
-            customerDTOS.add(customerDTO);
-        }
+        users.forEach(user -> customerDTOS.add(convertUserToCustomerDTO(user)));
         return customerDTOS;
     }
 
@@ -61,16 +57,13 @@ public class UserController {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
         Employee createdEmployee = employeeService.createEmployee(employee);
-        BeanUtils.copyProperties(createdEmployee, employeeDTO);
-        return employeeDTO;
+        return convertEmployeeToEmployeeDTO(createdEmployee);
     }
 
     @GetMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
         Employee employee = employeeService.getEmployee(employeeId);
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        BeanUtils.copyProperties(employee, employeeDTO);
-        return  employeeDTO;
+        return convertEmployeeToEmployeeDTO(employee);
     }
 
     @PutMapping("/employee/{employeeId}")
@@ -83,4 +76,21 @@ public class UserController {
         throw new UnsupportedOperationException();
     }
 
+    private CustomerDTO convertUserToCustomerDTO(User user) {
+        CustomerDTO customerDTO = new CustomerDTO();
+        BeanUtils.copyProperties(user, customerDTO);
+        List<Long> petIds = new LinkedList<>();
+        List<Pet> pets = user.getPets();
+        if (pets != null) {
+            pets.forEach(pet -> petIds.add(pet.getId()));
+        }
+        customerDTO.setPetIds(petIds);
+        return customerDTO;
+    }
+
+    private EmployeeDTO convertEmployeeToEmployeeDTO(Employee employee) {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        BeanUtils.copyProperties(employee, employeeDTO);
+        return employeeDTO;
+    }
 }
