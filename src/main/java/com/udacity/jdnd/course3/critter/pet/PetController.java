@@ -24,13 +24,8 @@ public class PetController {
 
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
-       Pet pet = new Pet();
-       BeanUtils.copyProperties(petDTO, pet);
-       User user = userService.getUser(petDTO.getOwnerId());
-       pet.setUser(user);
-       Pet createdPet = petService.createPet(pet);
-       BeanUtils.copyProperties(createdPet, petDTO);
-       return petDTO;
+       Pet createdPet = petService.createPet(convertPetDTOToPet(petDTO));
+       return convertPetToPetDto(createdPet);
     }
 
     @GetMapping("/{petId}")
@@ -56,9 +51,26 @@ public class PetController {
         return petDTOS;
     }
 
+    private Pet convertPetDTOToPet(PetDTO petDTO) {
+        Pet pet = new Pet();
+        pet.setName(petDTO.getName());
+        pet.setBirthDate(petDTO.getBirthDate());
+        pet.setType(petDTO.getType());
+        pet.setBirthDate(petDTO.getBirthDate());
+        User user = userService.getUser(petDTO.getOwnerId());
+        List<Pet> pets = user.getPets();
+        pets.add(pet);
+        user.setPets(pets);
+        pet.setUser(user);
+        return pet;
+    }
+
     private PetDTO convertPetToPetDto(Pet pet) {
         PetDTO petDTO = new PetDTO();
-        BeanUtils.copyProperties(pet, petDTO);
+        petDTO.setId(pet.getId());
+        petDTO.setName(pet.getName());
+        petDTO.setBirthDate(pet.getBirthDate());
+        petDTO.setType(pet.getType());
         petDTO.setOwnerId(pet.getUser().getId());
         return petDTO;
     }
