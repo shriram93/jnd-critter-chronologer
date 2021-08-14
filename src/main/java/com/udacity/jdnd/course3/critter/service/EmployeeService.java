@@ -5,7 +5,9 @@ import com.udacity.jdnd.course3.critter.data.Employee;
 import com.udacity.jdnd.course3.critter.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class EmployeeService {
@@ -23,5 +25,13 @@ public class EmployeeService {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
         Employee employee = optionalEmployee.orElseThrow(EmployeeNotFoundException::new);
         return employee;
+    }
+
+    public Employee setEmployeeAvailability(Long id, Set<DayOfWeek> daysAvailable) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        Employee employee = optionalEmployee.orElseThrow(EmployeeNotFoundException::new);
+        employee.setDaysAvailable(daysAvailable);
+        Employee updatedEmployee = employeeRepository.save(employee);
+        return updatedEmployee;
     }
 }
