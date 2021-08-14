@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.pet;
 
+import com.udacity.jdnd.course3.critter.user.data.User;
 import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
@@ -8,17 +9,18 @@ import java.time.LocalDate;
 @Entity
 public class Pet {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.ORDINAL)
-    private PetType petType;
+    private PetType type;
 
     @Nationalized
     private String name;
 
-    @Id
-    private long ownerId;
+    @ManyToOne
+    @JoinColumn(name="owner_id")
+    private User user;
 
     @Nationalized
     private LocalDate birthDate;
@@ -32,12 +34,12 @@ public class Pet {
         this.id = id;
     }
 
-    public PetType getPetType() {
-        return petType;
+    public PetType getType() {
+        return type;
     }
 
-    public void setPetType(PetType petType) {
-        this.petType = petType;
+    public void setType(PetType type) {
+        this.type = type;
     }
 
     public String getName() {
@@ -46,14 +48,6 @@ public class Pet {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(long ownerId) {
-        this.ownerId = ownerId;
     }
 
     public LocalDate getBirthDate() {
@@ -70,5 +64,13 @@ public class Pet {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
