@@ -1,20 +1,23 @@
 package com.udacity.jdnd.course3.critter.user.data;
 
+import com.udacity.jdnd.course3.critter.pet.Pet;
 import org.hibernate.annotations.Nationalized;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Nationalized
     private String name;
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "user")
+    private List<Pet> pets;
 
     public Long getId() {
         return id;
