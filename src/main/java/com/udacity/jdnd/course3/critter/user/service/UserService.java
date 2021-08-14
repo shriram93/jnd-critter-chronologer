@@ -26,8 +26,8 @@ public class UserService {
         return users;
     }
 
-    public User getUser(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
+    public User getUser(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
         User user = optionalUser.orElseThrow(UserNotFoundException::new);
         return user;
     }
