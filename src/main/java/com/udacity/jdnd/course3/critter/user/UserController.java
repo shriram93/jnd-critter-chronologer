@@ -1,12 +1,14 @@
 package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.user.data.Employee;
+import com.udacity.jdnd.course3.critter.user.data.User;
 import com.udacity.jdnd.course3.critter.user.service.EmployeeService;
 import com.udacity.jdnd.course3.critter.user.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -30,12 +32,23 @@ public class UserController {
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        throw new UnsupportedOperationException();
+       User user = new User();
+       BeanUtils.copyProperties(customerDTO, user);
+       User createdUser = userService.createUser(user);
+       BeanUtils.copyProperties(createdUser, customerDTO);
+       return customerDTO;
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        throw new UnsupportedOperationException();
+        List<User> users = userService.getAllUsers();
+        List<CustomerDTO> customerDTOS = new LinkedList<>();
+        for(User user: users) {
+            CustomerDTO customerDTO = new CustomerDTO();
+            BeanUtils.copyProperties(user, customerDTO);
+            customerDTOS.add(customerDTO);
+        }
+        return customerDTOS;
     }
 
     @GetMapping("/customer/pet/{petId}")
