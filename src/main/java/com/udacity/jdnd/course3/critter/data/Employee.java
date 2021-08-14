@@ -1,4 +1,4 @@
-package com.udacity.jdnd.course3.critter.user.data;
+package com.udacity.jdnd.course3.critter.data;
 
 import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 import org.hibernate.annotations.Nationalized;

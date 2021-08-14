@@ -1,11 +1,11 @@
 package com.udacity.jdnd.course3.critter.user;
 
-import com.udacity.jdnd.course3.critter.pet.Pet;
-import com.udacity.jdnd.course3.critter.pet.PetService;
-import com.udacity.jdnd.course3.critter.user.data.Employee;
-import com.udacity.jdnd.course3.critter.user.data.User;
-import com.udacity.jdnd.course3.critter.user.service.EmployeeService;
-import com.udacity.jdnd.course3.critter.user.service.UserService;
+import com.udacity.jdnd.course3.critter.data.Pet;
+import com.udacity.jdnd.course3.critter.service.PetService;
+import com.udacity.jdnd.course3.critter.data.Employee;
+import com.udacity.jdnd.course3.critter.data.User;
+import com.udacity.jdnd.course3.critter.service.EmployeeService;
+import com.udacity.jdnd.course3.critter.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;

@@ -1,8 +1,9 @@
 package com.udacity.jdnd.course3.critter.pet;
 
-import com.udacity.jdnd.course3.critter.user.data.User;
-import com.udacity.jdnd.course3.critter.user.service.UserService;
-import org.springframework.beans.BeanUtils;
+import com.udacity.jdnd.course3.critter.data.Pet;
+import com.udacity.jdnd.course3.critter.data.User;
+import com.udacity.jdnd.course3.critter.service.PetService;
+import com.udacity.jdnd.course3.critter.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;

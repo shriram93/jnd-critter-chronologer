@@ -1,11 +1,11 @@
-package com.udacity.jdnd.course3.critter.user.service;
+package com.udacity.jdnd.course3.critter.service;
 
-import com.udacity.jdnd.course3.critter.pet.Pet;
-import com.udacity.jdnd.course3.critter.pet.PetNotFoundException;
-import com.udacity.jdnd.course3.critter.pet.PetRepository;
-import com.udacity.jdnd.course3.critter.user.Exception.UserNotFoundException;
-import com.udacity.jdnd.course3.critter.user.data.User;
-import com.udacity.jdnd.course3.critter.user.repository.UserRepository;
+import com.udacity.jdnd.course3.critter.data.Pet;
+import com.udacity.jdnd.course3.critter.Exception.PetNotFoundException;
+import com.udacity.jdnd.course3.critter.repository.PetRepository;
+import com.udacity.jdnd.course3.critter.Exception.UserNotFoundException;
+import com.udacity.jdnd.course3.critter.data.User;
+import com.udacity.jdnd.course3.critter.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
