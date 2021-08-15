@@ -10,6 +10,7 @@ import com.udacity.jdnd.course3.critter.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -73,7 +74,10 @@ public class UserController {
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        LocalDate date = employeeDTO.getDate();
+        Set<EmployeeSkill> skillSet = employeeDTO.getSkills();
+        List<Employee> employees = employeeService.getEmployeesAvailable(date, skillSet);
+        return employees.stream().map(employee -> convertEmployeeToEmployeeDTO(employee)).collect(Collectors.toList());
     }
 
     private User convertCustomerDTOToUser(CustomerDTO customerDTO) {
