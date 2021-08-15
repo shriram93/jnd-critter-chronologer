@@ -1,6 +1,7 @@
 package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.data.Pet;
+import com.udacity.jdnd.course3.critter.pet.PetDTO;
 import com.udacity.jdnd.course3.critter.service.PetService;
 import com.udacity.jdnd.course3.critter.data.Employee;
 import com.udacity.jdnd.course3.critter.data.User;
@@ -12,6 +13,7 @@ import java.time.DayOfWeek;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Handles web requests related to Users.
@@ -42,9 +44,7 @@ public class UserController {
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
         List<User> users = userService.getAllUsers();
-        List<CustomerDTO> customerDTOS = new LinkedList<>();
-        users.forEach(user -> customerDTOS.add(convertUserToCustomerDTO(user)));
-        return customerDTOS;
+        return users.stream().map(user -> convertUserToCustomerDTO(user)).collect(Collectors.toList());
     }
 
     @GetMapping("/customer/pet/{petId}")
@@ -83,7 +83,7 @@ public class UserController {
         List<Pet> pets = new LinkedList<>();
         List<Long> petIds = customerDTO.getPetIds();
         if (petIds != null) {
-            petIds.forEach(id -> petService.getPet(id));
+            pets = petIds.stream().map(id -> petService.getPet(id)).collect(Collectors.toList());
         }
         user.setPets(pets);
         return user;
@@ -97,7 +97,7 @@ public class UserController {
         List<Long> petIds = new LinkedList<>();
         List<Pet> pets = user.getPets();
         if (pets != null) {
-            pets.forEach(pet -> petIds.add(pet.getId()));
+            petIds = pets.stream().map(pet -> pet.getId()).collect(Collectors.toList());
         }
         customerDTO.setPetIds(petIds);
         return customerDTO;

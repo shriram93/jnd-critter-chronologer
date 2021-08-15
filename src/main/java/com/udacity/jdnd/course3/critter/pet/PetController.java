@@ -6,8 +6,8 @@ import com.udacity.jdnd.course3.critter.service.PetService;
 import com.udacity.jdnd.course3.critter.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Handles web requests related to Pets.
@@ -38,18 +38,14 @@ public class PetController {
     @GetMapping
     public List<PetDTO> getPets(){
         List<Pet> pets = petService.getAllPets();
-        List<PetDTO> petDTOS = new LinkedList<>();
-        pets.forEach(pet -> petDTOS.add(convertPetToPetDto(pet)));
-        return petDTOS;
+        return pets.stream().map(pet -> convertPetToPetDto(pet)).collect(Collectors.toList());
     }
 
     @GetMapping("/owner/{ownerId}")
     public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
         User user = userService.getUser(ownerId);
         List<Pet> pets = petService.getPetsByOwner(user);
-        List<PetDTO> petDTOS = new LinkedList<>();
-        pets.forEach(pet -> petDTOS.add(convertPetToPetDto(pet)));
-        return petDTOS;
+        return pets.stream().map(pet -> convertPetToPetDto(pet)).collect(Collectors.toList());
     }
 
     private Pet convertPetDTOToPet(PetDTO petDTO) {
