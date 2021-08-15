@@ -1,8 +1,6 @@
 package com.udacity.jdnd.course3.critter.service;
 
 import com.udacity.jdnd.course3.critter.data.Pet;
-import com.udacity.jdnd.course3.critter.Exception.PetNotFoundException;
-import com.udacity.jdnd.course3.critter.repository.PetRepository;
 import com.udacity.jdnd.course3.critter.Exception.UserNotFoundException;
 import com.udacity.jdnd.course3.critter.data.User;
 import com.udacity.jdnd.course3.critter.repository.UserRepository;
@@ -16,11 +14,11 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final PetRepository petRepository;
+    private final PetService petService;
 
-    public UserService(UserRepository userRepository, PetRepository petRepository) {
+    public UserService(UserRepository userRepository, PetService petService) {
         this.userRepository = userRepository;
-        this.petRepository = petRepository;
+        this.petService = petService;
     }
 
     public User createUser(User user) {
@@ -39,8 +37,7 @@ public class UserService {
     }
 
     public User getOwnerByPet(Long petId) {
-        Optional<Pet> optionalPet = petRepository.findById(petId);
-        Pet pet = optionalPet.orElseThrow(PetNotFoundException::new);
+        Pet pet = petService.getPet(petId);
         Optional<User> optionalUser = userRepository.findByPet(pet);
         User user = optionalUser.orElseThrow(UserNotFoundException::new);
         return user;
